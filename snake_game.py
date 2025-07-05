@@ -98,6 +98,11 @@ class SnakeGame:
         # Check if food is eaten
         if new_head == self.food:
             self.score += 1
+            if len(self.snake) == GRID_COUNT * GRID_COUNT:
+                # Snake filled the board; end the game
+                self.food = None
+                self.game_over = True
+                return
             self.food = self.spawn_food()
         else:
             self.snake.pop()
@@ -115,9 +120,13 @@ class SnakeGame:
             pygame.draw.rect(self.screen, GREEN,
                            (segment[0] * GRID_SIZE, segment[1] * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1))
 
-        # Draw food
-        pygame.draw.rect(self.screen, RED,
-                        (self.food[0] * GRID_SIZE, self.food[1] * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1))
+        # Draw food if available
+        if self.food is not None:
+            pygame.draw.rect(
+                self.screen,
+                RED,
+                (self.food[0] * GRID_SIZE, self.food[1] * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1),
+            )
 
         # Draw score
         score_text = self.font.render(f'Score: {self.score}', True, WHITE)
