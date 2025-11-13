@@ -12,6 +12,10 @@ GRID_SIZE = 20
 GRID_COUNT = WINDOW_SIZE // GRID_SIZE
 FPS = 10
 
+# Validate constants
+if WINDOW_SIZE % GRID_SIZE != 0:
+    raise ValueError(f"WINDOW_SIZE ({WINDOW_SIZE}) must be divisible by GRID_SIZE ({GRID_SIZE})")
+
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -41,10 +45,19 @@ class SnakeGame:
         self.game_over = False
 
     def spawn_food(self):
-        while True:
-            food = (random.randint(0, GRID_COUNT - 1), random.randint(0, GRID_COUNT - 1))
-            if food not in self.snake:
-                return food
+        # Get all available positions
+        available_positions = []
+        for x in range(GRID_COUNT):
+            for y in range(GRID_COUNT):
+                pos = (x, y)
+                if pos not in self.snake:
+                    available_positions.append(pos)
+
+        # If no positions available (shouldn't happen in practice), return a random position
+        if not available_positions:
+            return (random.randint(0, GRID_COUNT - 1), random.randint(0, GRID_COUNT - 1))
+
+        return random.choice(available_positions)
 
     def handle_input(self):
         for event in pygame.event.get():
@@ -88,7 +101,8 @@ class SnakeGame:
 
         # Check for collisions with self
         new_head = (head_x, head_y)
-        if new_head in self.snake[1:]:
+        # Only check collision with body (excluding tail since it will move)
+        if new_head in self.snake[1:-1]:
             self.game_over = True
             return
 
