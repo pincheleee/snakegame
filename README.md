@@ -2,6 +2,14 @@
 
 A classic Snake game implementation using Python and Pygame.
 
+## Project Status
+
+- Status: archived
+- Last major update: 2026-03-07
+- Current focus: none; finished game
+- Run: `python snake_game.py`
+- Next step: none planned
+
 ## Requirements
 - Python 3.x
 - Pygame
